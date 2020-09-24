@@ -1,0 +1,83 @@
+@model IEnumerable<BoxOptimizer.Models.Boxes>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Boxes</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BOX_ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.WEIGHT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PART_COUNT)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BOX_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WEIGHT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PART_COUNT)
+            </td>
+        
+        @if ( item.ShipmentParts != null)
+            {    
+                    @foreach (var part in item.ShipmentParts) {
+                        <tr>
+                            <td>
+                            </td>
+                            <td> PART NO:
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => part.PART_NUMBER)
+                            </td>
+                            <td> PART WEIGHT:
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => part.PART_WEIGHT)
+                            </td>
+                            <td> PART COST:
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => part.PART_COST)
+                            </td>
+                        </tr>
+                    }
+            }
+        </tr>          
+}
+        <tr>
+            <td>
+                <form method="post" action="@Url.Action( "SplitBoxesToParts" , "Boxes")">
+                    <input class="btn-primary" type="submit" value="Split Boxes To Parts" />
+                </form>
+            </td>
+            <td>
+                <form method="post" action="@Url.Action( "CreateParts" , "Boxes")">
+                    <input class="btn-primary" type="submit" value="Create Parts" />
+                </form>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              TOTAL COST: @Model.Sum(i => i?.ShipmentParts?.Sum(x => x.PART_COST))
+            </td>
+        </tr>
+    </tbody>
+</table>
